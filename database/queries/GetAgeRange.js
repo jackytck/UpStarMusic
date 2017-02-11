@@ -6,4 +6,34 @@ const Artist = require('../models/artist');
  * containing the min and max ages, like { min: 16, max: 45 }.
  */
 module.exports = () => {
+  // Approach 1: separated queries
+  const minQuery = Artist
+    .find()
+    .sort({ age: 1 })
+    .limit(1)
+    .then(artists => artists[0].age);
+
+  const maxQuery = Artist
+    .find()
+    .sort({ age: -1 })
+    .limit(1)
+    .then(artists => artists[0].age);
+
+  return Promise.all([minQuery, maxQuery])
+    .then(result => {
+      return {
+        min: result[0],
+        max: result[1]
+      };
+    });
+
+  // Approach 2: aggregation
+  // return Artist.aggregate()
+  //   .group({
+  //     _id: null,
+  //     min: { $min: '$age' },
+  //     max: { $max: '$age' }
+  //   })
+  //   .project({ _id: 0, min: 1, max: 1 })
+  //   .then(result => result[0]);
 };

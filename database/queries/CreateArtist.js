@@ -6,4 +6,6 @@ const Artist = require('../models/artist');
  * @return {promise} A promise that resolves with the Artist that was created
  */
 module.exports = (artistProps) => {
+  // return new Artist(artistProps).save();
+  return Artist.create(artistProps);
 };
